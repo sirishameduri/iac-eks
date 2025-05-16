@@ -29,7 +29,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./Ekscluster-githubactions
+        working-directory: ./GITHUB-DEMO
 
     steps:
       - name: Checkout source code
