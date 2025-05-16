@@ -84,7 +84,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./terraform
+        working-directory: ./GITHUB-DEMO
 
     steps:
       - name: Checkout source code
