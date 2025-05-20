@@ -1,7 +1,5 @@
-# Workflow Name
 name: "infra-gitops"
 
-# Workflow Triggers
 on:
   push:
     branches:
@@ -10,7 +8,6 @@ on:
       - github-demo/**
   workflow_dispatch: 
 
-# Environment Variables
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -18,13 +15,11 @@ env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   EKS_CLUSTER: ${{ vars.EKS_CLUSTER }}
 
-# Define Jobs
 jobs:
   terraform:
     name: "Deploy Infra with Terraform on AWS"
     runs-on: ubuntu-latest
-    # Run only on push events
-    if: github.event_name == 'push'  
+    if: github.event_name == 'push'
 
     defaults:
       run:
@@ -66,19 +61,24 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Verify EKS Cluster creation
+        id: verify-cluster
+        run: |
+          aws eks describe-cluster --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }} || exit 1
+        if: steps.apply.outcome == 'success'
+
       - name: Get Kubernetes config
         id: getconfig
-        if: steps.apply.outcome == 'success'
-        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }} 
+        if: steps.verify-cluster.outcome == 'success'
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
 
       - name: Install Ingress controller
         if: steps.apply.outcome == 'success' && steps.getconfig.outcome == 'success'
         run: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.0-beta.0/deploy/static/provider/aws/deploy.yaml
-  
+
   destroy:
     name: "Destroy Infra on AWS"
     runs-on: ubuntu-latest
-    # Only trigger for workflow_dispatch
     if: github.event_name == 'workflow_dispatch'
 
     defaults:
