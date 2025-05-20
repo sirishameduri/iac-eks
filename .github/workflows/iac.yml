@@ -61,6 +61,14 @@ jobs:
         id: apply
         run: terraform apply -auto-approve -input=false -parallelism=1 planfile
 
+      - name: List all EKS clusters
+        run: aws eks list-clusters --region ${{ env.AWS_REGION }}
+
+      - name: Describe the cluster (debug)
+        run: |
+         aws eks describe-cluster --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }} || echo "Cluster not found!"
+
+
       - name: Get Kubernetes config
         id: getconfig
         if: steps.apply.outcome == 'success'
