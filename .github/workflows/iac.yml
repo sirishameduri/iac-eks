@@ -50,7 +50,7 @@ jobs:
 
       - name: Terraform plan
         id: plan
-        run: terraform plan -no-color -input=false -out planfile
+        run: terraform plan -no-color -input=true -out planfile
         continue-on-error: true
 
       - name: Terraform plan status
@@ -59,7 +59,7 @@ jobs:
 
       - name: Terraform apply
         id: apply
-        run: terraform apply -auto-approve -input=false -parallelism=1 planfile
+        run: terraform apply -auto-approve -input=true -parallelism=1 planfile
 
       - name: List all EKS clusters
         run: aws eks list-clusters --region ${{ env.AWS_REGION }}
