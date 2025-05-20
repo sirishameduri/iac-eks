@@ -7,7 +7,7 @@ on:
     branches:
       - iac-eks
     paths:  
-      - EKS-HELM/**
+      - github-demo/**
   workflow_dispatch: 
 
 # Environment Variables
