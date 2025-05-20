@@ -8,7 +8,7 @@ on:
       - iac-eks
     paths:  
       - EKS-HELM/**
-  workflow_dispatch: # Enables manual trigger for destroy job
+  workflow_dispatch: 
 
 # Environment Variables
 env:
@@ -29,7 +29,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./GITHUB-DEMO
+        working-directory: ./github-demo
 
     steps:
       - name: Checkout source code
@@ -84,7 +84,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./GITHUB-DEMO
+        working-directory: ./github-demo
 
     steps:
       - name: Checkout source code
