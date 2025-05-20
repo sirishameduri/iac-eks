@@ -95,7 +95,7 @@ jobs:
 
       - name: Terraform init
         id: init
-        run: terraform init -backend-config="bucket=$S3_BUCKET"
+        run: terraform init -backend-config="bucket=aws-largescaleproject-terraform"
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
